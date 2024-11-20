@@ -15,4 +15,4 @@ spring:
     enabled: false
 
 jwt:
-  secret-key: "test-jwt-secret-key"
+  secret-key: "test-jwt-secret-key-test-jwt-secret-key"
