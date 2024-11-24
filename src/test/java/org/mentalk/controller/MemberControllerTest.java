@@ -13,7 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mentalk.config.SecurityConfig;
-import org.mentalk.dto.MemberRequest;
+import org.mentalk.dto.request.MemberCreateRequest;
+import org.mentalk.dto.service.MemberDto;
 import org.mentalk.enums.ErrorCode;
 import org.mentalk.exception.ApiException;
 import org.mentalk.security.JwtUtil;
@@ -40,34 +41,33 @@ class MemberControllerTest {
     @MockBean
     private MemberService memberService;
 
-    private MemberRequest.Register registerDto;
+    private MemberCreateRequest createRequest;
 
     @BeforeEach
     void setUp() {
-        registerDto = MemberRequest.Register.builder()
-                                            .email("test@test.com")
-                                            .password("testPassword")
-                                            .username("testUser")
-                                            .phoneNumber("01012345678")
-                                            .build();
+        createRequest = new MemberCreateRequest("test@test.com",
+                                                "testPassword",
+                                                "testUser",
+                                                "01012345678",
+                                                null);
     }
 
     /**
-     * /auth/member/register Test
+     * /api/members Test
      */
 
     @Test
-    @DisplayName("회원 가입 성공 - 200 응답")
-    void registerMember() throws Exception {
+    @DisplayName("회원 저장 성공 - 200 응답")
+    void createMember() throws Exception {
         // given
         doNothing().when(memberService)
-                   .registerMember(any(MemberRequest.Register.class));
+                   .createMember(any(MemberDto.class));
 
         // when
         ResultActions actions = mockMvc.perform(
-                post("/api/members/register")
+                post("/api/members")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(registerDto))
+                        .content(objectMapper.writeValueAsString(createRequest))
         );
 
         // then
@@ -77,40 +77,41 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("회원 가입 중 데이터 무결성 위반 - 409(C003) 응답")
-    void registerMember_whenDataIntegrityViolation() throws Exception {
+    @DisplayName("회원 저장 중 데이터 무결성 위반 - 500(S002) 응답")
+    void createMember_whenDataIntegrityViolation() throws Exception {
         // given
-        doThrow(new ApiException(ErrorCode.REGISTER_DATA_INTEGRITY))
+        doThrow(new ApiException(ErrorCode.DATA_INTEGRITY_VIOLATION))
                 .when(memberService)
-                .registerMember(any(MemberRequest.Register.class));
+                .createMember(any(MemberDto.class));
 
         // when
         ResultActions actions = mockMvc.perform(
-                post("/api/members/register")
+                post("/api/members")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(registerDto))
+                        .content(objectMapper.writeValueAsString(createRequest))
         );
 
         // then
-        actions.andExpect(status().isConflict());
+        actions.andExpect(status().isInternalServerError());
         actions.andExpect(jsonPath("$.success").value(false));
-        actions.andExpect(jsonPath("$.payload.code").value(ErrorCode.REGISTER_DATA_INTEGRITY.getCode()));
+        actions.andExpect(
+                jsonPath("$.payload.code").value(ErrorCode.DATA_INTEGRITY_VIOLATION.getCode()));
         actions.andDo(print());
     }
 
     @Test
-    @DisplayName("회원 가입 중 예기치 않은 오류 발생 - 500(S000) 응답")
-    void registerMember_whenUnexpectedException() throws Exception {
+    @DisplayName("회원 저장 중 예기치 않은 오류 발생 - 500(S001) 응답")
+    void createMember_whenUnexpectedException() throws Exception {
         // given
         doThrow(new ApiException(ErrorCode.UNEXPECTED_ERROR))
                 .when(memberService)
-                .registerMember(any(MemberRequest.Register.class));
+                .createMember(any(MemberDto.class));
 
         // when
         ResultActions actions = mockMvc.perform(
-                post("/api/members/register")
+                post("/api/members")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(registerDto))
+                        .content(objectMapper.writeValueAsString(createRequest))
         );
 
         // then

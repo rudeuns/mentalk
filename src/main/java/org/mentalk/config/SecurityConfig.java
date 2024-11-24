@@ -3,11 +3,12 @@ package org.mentalk.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.mentalk.dto.ApiResponse;
+import org.mentalk.dto.response.ApiResponse;
 import org.mentalk.enums.ErrorCode;
 import org.mentalk.security.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -49,9 +50,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
             .cors(configurer -> configurer.configurationSource(corsConfigurationSource()))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(
+                    session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/members/register", "/api/auth/**")
+                    .requestMatchers(HttpMethod.POST, "/api/members")
+                    .permitAll()
+                    .requestMatchers("/api/auth/**")
                     .permitAll()
                     .requestMatchers("/api/admin/**")
                     .hasRole("ADMIN")

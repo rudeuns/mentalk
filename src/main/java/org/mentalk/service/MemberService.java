@@ -2,7 +2,7 @@ package org.mentalk.service;
 
 import lombok.RequiredArgsConstructor;
 import org.mentalk.domain.Member;
-import org.mentalk.dto.MemberRequest;
+import org.mentalk.dto.service.MemberDto;
 import org.mentalk.enums.ErrorCode;
 import org.mentalk.exception.ApiException;
 import org.mentalk.repository.MemberRepository;
@@ -19,14 +19,13 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void registerMember(MemberRequest.Register registerDto) {
+    public void createMember(MemberDto memberDto) {
         try {
-            String encodePassword = passwordEncoder.encode(registerDto.getPassword());
-            Member member = registerDto.toEntity(encodePassword);
-
+            String encodePassword = passwordEncoder.encode(memberDto.password());
+            Member member = memberDto.toEntity(encodePassword);
             memberRepository.save(member);
         } catch (DataIntegrityViolationException e) {
-            throw new ApiException(ErrorCode.REGISTER_DATA_INTEGRITY);
+            throw new ApiException(ErrorCode.DATA_INTEGRITY_VIOLATION);
         } catch (Exception e) {
             throw new ApiException(ErrorCode.UNEXPECTED_ERROR);
         }

@@ -2,8 +2,10 @@ package org.mentalk.service;
 
 import lombok.RequiredArgsConstructor;
 import org.mentalk.domain.Member;
-import org.mentalk.dto.AuthRequest;
-import org.mentalk.dto.JwtDto;
+import org.mentalk.dto.service.EmailDto;
+import org.mentalk.dto.service.JwtDto;
+import org.mentalk.dto.service.LoginDto;
+import org.mentalk.dto.service.PhoneNumberDto;
 import org.mentalk.enums.ErrorCode;
 import org.mentalk.enums.LoginProvider;
 import org.mentalk.exception.ApiException;
@@ -22,25 +24,26 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = true)
-    public void validateEmailDuplicate(AuthRequest.Email emailDto) {
+    public void checkEmailDuplicate(EmailDto emailDto) {
         memberRepository.findByEmail(emailDto.email())
                         .ifPresent(member -> {
-                            throw new ApiException(ErrorCode.EMAIL_DUPLICATED);
+                            throw new ApiException(ErrorCode.EMAIL_DUPLICATE);
                         });
     }
 
     @Transactional(readOnly = true)
-    public void validatePhoneNumberDuplicate(AuthRequest.PhoneNumber phoneNumberDto) {
+    public void checkPhoneNumberDuplicate(PhoneNumberDto phoneNumberDto) {
         memberRepository.findByPhoneNumber(phoneNumberDto.phoneNumber())
                         .ifPresent(member -> {
-                            throw new ApiException(ErrorCode.PHONE_NUMBER_DUPLICATED);
+                            throw new ApiException(ErrorCode.PHONE_NUMBER_DUPLICATE);
                         });
     }
 
     @Transactional(readOnly = true)
-    public JwtDto login(AuthRequest.Login loginDto) {
+    public JwtDto login(LoginDto loginDto) {
         Member member = memberRepository.findByEmail(loginDto.email())
-                                        .orElseThrow(() -> new ApiException(ErrorCode.INVALID_EMAIL));
+                                        .orElseThrow(
+                                                () -> new ApiException(ErrorCode.INVALID_EMAIL));
 
         if (!passwordEncoder.matches(loginDto.password(), member.getPassword())) {
             throw new ApiException(ErrorCode.INVALID_PASSWORD);

@@ -19,13 +19,13 @@ public enum ErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, "F001", "접근 권한이 없습니다."),
 
     // 409 Conflict
-    EMAIL_DUPLICATED(HttpStatus.CONFLICT, "C001", "이미 사용 중인 이메일입니다."),
-    PHONE_NUMBER_DUPLICATED(HttpStatus.CONFLICT, "C002", "이미 존재하는 회원입니다."),
-    REGISTER_DATA_INTEGRITY(HttpStatus.CONFLICT, "C003", "회원가입 중 데이터 무결성 문제가 발생했습니다."),
+    EMAIL_DUPLICATE(HttpStatus.CONFLICT, "C001", "이미 사용 중인 이메일입니다."),
+    PHONE_NUMBER_DUPLICATE(HttpStatus.CONFLICT, "C002", "이미 존재하는 회원입니다."),
 
     // 500 Server Error
-    UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S000", "예기치 않은 오류가 발생했습니다."),
-    JWT_CREATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S001", "JWT 생성 중 오류가 발생했습니다.");
+    UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S001", "예기치 않은 오류가 발생했습니다."),
+    DATA_INTEGRITY_VIOLATION(HttpStatus.INTERNAL_SERVER_ERROR, "S002", "데이터 무결성 위반 문제가 발생했습니다."),
+    JWT_CREATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S003", "JWT 생성 중 오류가 발생했습니다.");
 
     private final HttpStatus status;
     private final String code;
