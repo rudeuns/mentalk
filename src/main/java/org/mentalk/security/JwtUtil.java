@@ -21,8 +21,7 @@ public class JwtUtil {
     private final SecretKey secretKey;
     private final int expMinutes = 1440;
 
-    public JwtUtil(
-            @Value("${jwt.secret-key}") String secretKey) {
+    public JwtUtil(@Value("${jwt.secret-key}") String secretKey) {
         this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 

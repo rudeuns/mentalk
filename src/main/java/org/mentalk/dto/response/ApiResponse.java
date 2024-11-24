@@ -1,11 +1,13 @@
-package org.mentalk.dto;
+package org.mentalk.dto.response;
 
 public record ApiResponse(boolean success, Object payload) {
 
     private record Success<T>(String message, T data) {
+
     }
 
     private record Error(String code, String message) {
+
     }
 
     public static <T> ApiResponse success(String message, T data) {

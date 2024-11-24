@@ -29,8 +29,8 @@ class MemberRepositoryTest {
     void save_whenUserMember() {
         // given
         Member member = Member.builder()
-                              .username("any")
-                              .phoneNumber("any")
+                              .username("testUser")
+                              .phoneNumber("01012345678")
                               .build();
 
         // when
@@ -46,8 +46,8 @@ class MemberRepositoryTest {
     void save_whenMentorMember() {
         // given
         Member member = Member.builder()
-                              .username("any")
-                              .phoneNumber("any")
+                              .username("testUser")
+                              .phoneNumber("01012345678")
                               .role(Role.MENTOR)
                               .build();
 
@@ -61,18 +61,18 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("등록된 이메일로 회원 저장 시도 - 예외 발생")
-    void save_whenEmailDuplicated() {
+    void save_whenEmailDuplicate() {
         // given
         String email = "test@test.com";
         Member member1 = Member.builder()
                                .email(email)
-                               .username("any1")
-                               .phoneNumber("any1")
+                               .username("testUser1")
+                               .phoneNumber("01012345678")
                                .build();
         Member member2 = Member.builder()
                                .email(email)
-                               .username("any2")
-                               .phoneNumber("any2")
+                               .username("testUser2")
+                               .phoneNumber("01087654321")
                                .build();
         memberRepository.save(member1);
 
@@ -83,17 +83,15 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("등록된 전화번호로 회원 저장 시도 - 예외 발생")
-    void save_whenPhoneNumberDuplicated() {
+    void save_whenPhoneNumberDuplicate() {
         // given
         String phoneNumber = "01012345678";
         Member member1 = Member.builder()
-                               .email("any1")
-                               .username("any1")
+                               .username("testUser1")
                                .phoneNumber(phoneNumber)
                                .build();
         Member member2 = Member.builder()
-                               .email("any2")
-                               .username("any2")
+                               .username("testUser2")
                                .phoneNumber(phoneNumber)
                                .build();
         memberRepository.save(member1);
@@ -104,18 +102,54 @@ class MemberRepositoryTest {
     }
 
     /**
+     * findById Test
+     */
+
+    @Test
+    @DisplayName("Id로 등록된 회원 조회 - Member 객체 반환")
+    void findById_whenMemberExist() {
+        // given
+        Member member = Member.builder()
+                              .username("testUser")
+                              .phoneNumber("01012345678")
+                              .build();
+        Member savedMember = memberRepository.save(member);
+
+        // when
+        Optional<Member> foundMember = memberRepository.findById(savedMember.getId());
+
+        // then
+        assertThat(foundMember.isPresent()).isTrue();
+        assertThat(foundMember.get()
+                              .getId()).isEqualTo(savedMember.getId());
+    }
+
+    @Test
+    @DisplayName("Id로 등록되지 않은 회원 조회 - null 반환")
+    void findById_whenMemberNotExist() {
+        // given
+        Long id = 1L;
+
+        // when
+        Optional<Member> foundMember = memberRepository.findById(id);
+
+        // then
+        assertThat(foundMember.isPresent()).isFalse();
+    }
+
+    /**
      * findByEmail Test
      */
 
     @Test
     @DisplayName("이메일로 등록된 회원 조회 - Member 객체 반환")
-    void findByEmail_whenEmailExists() {
+    void findByEmail_whenMemberExist() {
         // given
         String email = "test@test.com";
         Member member = Member.builder()
                               .email(email)
-                              .username("any")
-                              .phoneNumber("any")
+                              .username("testUser")
+                              .phoneNumber("01012345678")
                               .build();
         memberRepository.save(member);
 
@@ -130,7 +164,7 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("이메일로 등록되지 않은 회원 조회 - null 반환")
-    void findByEmail_whenEmailNotExists() {
+    void findByEmail_whenMemberNotExist() {
         // given
         String email = "test@test.com";
 
@@ -147,11 +181,11 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("전화번호로 등록된 회원 조회 - Member 객체 반환")
-    void findByPhoneNumber_whenPhoneNumberExists() {
+    void findByPhoneNumber_whenMemberExist() {
         // given
         String phoneNumber = "01012345678";
         Member member = Member.builder()
-                              .username("any")
+                              .username("testUser")
                               .phoneNumber(phoneNumber)
                               .build();
         memberRepository.save(member);
@@ -167,7 +201,7 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("전화번호로 등록되지 않은 회원 조회 - null 반환")
-    void findByPhoneNumber_whenPhoneNumberNotExists() {
+    void findByPhoneNumber_whenMemberNotExist() {
         // given
         String phoneNumber = "01012345678";
 
@@ -177,5 +211,4 @@ class MemberRepositoryTest {
         // then
         assertThat(foundMember.isPresent()).isFalse();
     }
-
 }
