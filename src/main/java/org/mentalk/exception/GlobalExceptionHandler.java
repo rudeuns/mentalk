@@ -13,19 +13,28 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiResponse> handleApiException(ApiException e) {
-        log.error(e.getMessage(), e);
-
         ErrorCode errorCode = e.getErrorCode();
+
+        log.error("{} {}", errorCode.getCode(), errorCode.getMessage(), e);
+
         return ResponseEntity.status(errorCode.getStatus())
                              .body(ApiResponse.failure(errorCode.getCode(),
                                                        errorCode.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse> handleGeneralException(Exception e) {
-        log.error(e.getMessage(), e);
+    public ResponseEntity<ApiResponse> handleExceptions(Exception e) {
+        ErrorCode errorCode = switch (e.getClass()
+                                       .getSimpleName()) {
+            case "DataIntegrityViolationException" -> ErrorCode.DATA_INTEGRITY_VIOLATION;
+            case "MethodArgumentNotValidException" -> ErrorCode.METHOD_ARG_NOT_VALID;
+            case "HttpMessageNotReadableException" -> ErrorCode.HTTP_MESSAGE_NOT_READABLE;
+            case "HttpMessageConversionException" -> ErrorCode.HTTP_MESSAGE_CONVERSION;
+            default -> ErrorCode.UNEXPECTED_ERROR;
+        };
 
-        ErrorCode errorCode = ErrorCode.UNEXPECTED_ERROR;
+        log.error("{} {}", errorCode.getCode(), errorCode.getMessage(), e);
+        
         return ResponseEntity.status(errorCode.getStatus())
                              .body(ApiResponse.failure(errorCode.getCode(),
                                                        errorCode.getMessage()));
