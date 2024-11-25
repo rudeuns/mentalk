@@ -57,6 +57,8 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers("/api/auth/**")
                     .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/events")
+                    .hasRole("MENTOR")
                     .requestMatchers("/api/admin/**")
                     .hasRole("ADMIN")
                     .anyRequest()
@@ -68,8 +70,8 @@ public class SecurityConfig {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.getWriter()
                                 .write(new ObjectMapper().writeValueAsString(
-                                        ApiResponse.failure(ErrorCode.UNAUTHORIZED.getCode(),
-                                                            ErrorCode.UNAUTHORIZED.getMessage())
+                                        ApiResponse.failure(ErrorCode.SC_UNAUTHORIZED.getCode(),
+                                                            ErrorCode.SC_UNAUTHORIZED.getMessage())
                                 ));
                     })
                     .accessDeniedHandler((request, response, accessDeniedException) -> {
@@ -77,8 +79,8 @@ public class SecurityConfig {
                         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                         response.getWriter()
                                 .write(new ObjectMapper().writeValueAsString(
-                                        ApiResponse.failure(ErrorCode.FORBIDDEN.getCode(),
-                                                            ErrorCode.FORBIDDEN.getMessage())
+                                        ApiResponse.failure(ErrorCode.SC_FORBIDDEN.getCode(),
+                                                            ErrorCode.SC_FORBIDDEN.getMessage())
                                 ));
                     })
             )
