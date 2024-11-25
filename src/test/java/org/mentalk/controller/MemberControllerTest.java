@@ -92,7 +92,7 @@ class MemberControllerTest {
         );
 
         // then
-        actions.andExpect(status().isInternalServerError());
+        actions.andExpect(status().isBadRequest());
         actions.andExpect(jsonPath("$.success").value(false));
         actions.andExpect(
                 jsonPath("$.payload.code").value(ErrorCode.DATA_INTEGRITY_VIOLATION.getCode()));
