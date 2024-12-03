@@ -2,7 +2,9 @@ package org.mentalk.utils;
 
 import org.mentalk.auth.dto.request.EmailCheckRequest;
 import org.mentalk.auth.dto.request.LocalLoginRequest;
+import org.mentalk.common.enums.SessionType;
 import org.mentalk.member.dto.request.SignupRequest;
+import org.mentalk.session.dto.request.SessionCreateRequest;
 
 public class RequestFactory {
 
@@ -30,5 +32,10 @@ public class RequestFactory {
 
     public static LocalLoginRequest localLoginRequestWithDefaults() {
         return new LocalLoginRequest("user@mentalk.com", "password");
+    }
+
+    public static SessionCreateRequest sessionCreateRequestWithDefaults() {
+        return new SessionCreateRequest(SessionType.MENTORING, "Session Title",
+                                        "Session Content.");
     }
 }

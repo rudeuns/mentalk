@@ -4,9 +4,12 @@ import org.mentalk.auth.dto.JwtDto;
 import org.mentalk.auth.dto.LocalAccountDto;
 import org.mentalk.auth.dto.LocalLoginDto;
 import org.mentalk.common.enums.Role;
+import org.mentalk.common.enums.SessionType;
 import org.mentalk.member.domain.Member;
 import org.mentalk.member.dto.MemberDto;
 import org.mentalk.member.dto.SignupDto;
+import org.mentalk.session.dto.SessionDto;
+import org.mentalk.session.dto.SessionIdDto;
 
 public class DtoFactory {
 
@@ -55,5 +58,20 @@ public class DtoFactory {
 
     public static JwtDto jwtDtoWithDefaults() {
         return new JwtDto("accessToken");
+    }
+
+    public static SessionDto sessionDto(Value<SessionType> sessionType, Value<String> title,
+                                        Value<String> content, Value<Long> mentorId) {
+        return new SessionDto(sessionType.orElse(SessionType.MENTORING),
+                              title.orElse("Session Title"),
+                              content.orElse("Session Content"), mentorId.orElse(1L));
+    }
+
+    public static SessionDto sessionDtoWithDefaults() {
+        return new SessionDto(SessionType.MENTORING, "Session Title", "Session Content", 1L);
+    }
+
+    public static SessionIdDto sessionIdDtoWithDefaults() {
+        return new SessionIdDto(1L);
     }
 }

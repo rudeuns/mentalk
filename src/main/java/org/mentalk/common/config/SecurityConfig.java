@@ -57,6 +57,8 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/members")
                     .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/sessions")
+                    .hasRole("MENTOR")
                     .anyRequest()
                     .authenticated()
             )
