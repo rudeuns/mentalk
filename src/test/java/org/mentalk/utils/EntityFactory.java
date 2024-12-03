@@ -2,7 +2,9 @@ package org.mentalk.utils;
 
 import org.mentalk.auth.domain.LocalAccount;
 import org.mentalk.common.enums.Role;
+import org.mentalk.common.enums.SessionType;
 import org.mentalk.member.domain.Member;
+import org.mentalk.session.domain.Session;
 
 public class EntityFactory {
 
@@ -34,6 +36,15 @@ public class EntityFactory {
                      .build();
     }
 
+    public static Member mentorWithDefaults() {
+        return Member.builder()
+                     .id(1L)
+                     .name("mentor")
+                     .phoneNumber("01012345678")
+                     .role(Role.MENTOR)
+                     .build();
+    }
+
     public static LocalAccount localAccount(Value<Member> member,
                                             Value<String> email, Value<String> hashedPassword) {
         return LocalAccount.builder()
@@ -61,5 +72,25 @@ public class EntityFactory {
                            .email("user@mentalk.com")
                            .hashedPassword("hashedPassword")
                            .build();
+    }
+
+    public static Session session(Value<Member> mentor, Value<SessionType> sessionType,
+                                  Value<String> title, Value<String> content) {
+        return Session.builder()
+                      .mentor(mentor.orElse(EntityFactory.mentorWithDefaults()))
+                      .sessionType(sessionType.orElse(SessionType.MENTORING))
+                      .title(title.orElse("Session Title"))
+                      .content(content.orElse("Session Content"))
+                      .build();
+    }
+
+    public static Session sessionWithDefaults() {
+        return Session.builder()
+                      .id(1L)
+                      .mentor(EntityFactory.mentorWithDefaults())
+                      .sessionType(SessionType.MENTORING)
+                      .title("Session Title")
+                      .content("Session Content")
+                      .build();
     }
 }
