@@ -21,7 +21,7 @@ public class SessionService {
     @Transactional
     public SessionIdDto createSession(SessionDto sessionDto) {
         Member mentor = memberRepository.findById(sessionDto.mentorId()).orElseThrow(
-                () -> new ApiException(ErrorCode.MENTOR_NOT_FOUND));
+                () -> new ApiException(ErrorCode.MEMBER_NOT_FOUND));
 
         Session session = sessionRepository.save(sessionDto.toEntity(mentor));
 

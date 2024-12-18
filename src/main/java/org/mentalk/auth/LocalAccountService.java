@@ -18,7 +18,7 @@ public class LocalAccountService {
     @Transactional
     public void createLocalAccount(LocalAccountDto localAccountDto) {
         if (localAccountRepository.existsByMemberId(localAccountDto.member().getId())) {
-            throw new ApiException(ErrorCode.ALREADY_REGISTERED);
+            throw new ApiException(ErrorCode.ALREADY_ACCOUNT_REGISTERED);
         }
 
         if (localAccountRepository.existsByEmail(localAccountDto.email())) {
