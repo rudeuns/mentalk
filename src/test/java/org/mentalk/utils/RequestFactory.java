@@ -1,6 +1,7 @@
 package org.mentalk.utils;
 
 import org.mentalk.auth.dto.request.EmailCheckRequest;
+import org.mentalk.auth.dto.request.EmailFindRequest;
 import org.mentalk.auth.dto.request.LocalLoginRequest;
 import org.mentalk.common.enums.SessionType;
 import org.mentalk.member.dto.request.SignupRequest;
@@ -18,16 +19,8 @@ public class RequestFactory {
         return new SignupRequest("user@mentalk.com", "password", "user", "01012345678");
     }
 
-    public static EmailCheckRequest emailCheckRequest(Value<String> email) {
-        return new EmailCheckRequest(email.orElse("user@mentalk.com"));
-    }
-
     public static EmailCheckRequest emailCheckRequestWithDefaults() {
         return new EmailCheckRequest("user@mentalk.com");
-    }
-
-    public static LocalLoginRequest localLoginRequest(Value<String> email, Value<String> password) {
-        return new LocalLoginRequest(email.orElse("user@mentalk.com"), password.orElse("password"));
     }
 
     public static LocalLoginRequest localLoginRequestWithDefaults() {
@@ -37,5 +30,9 @@ public class RequestFactory {
     public static SessionCreateRequest sessionCreateRequestWithDefaults() {
         return new SessionCreateRequest(SessionType.MENTORING, "Session Title",
                                         "Session Content.");
+    }
+
+    public static EmailFindRequest emailFindRequestWithDefaults() {
+        return new EmailFindRequest("01012345678");
     }
 }

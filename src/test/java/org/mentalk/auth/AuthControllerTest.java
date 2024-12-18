@@ -1,8 +1,10 @@
 package org.mentalk.auth;
 
+import static org.mentalk.common.enums.ErrorCode.ACCOUNT_NOT_FOUND;
 import static org.mentalk.common.enums.ErrorCode.ALREADY_EMAIL_IN_USE;
 import static org.mentalk.common.enums.ErrorCode.EMAIL_NOT_FOUND;
 import static org.mentalk.common.enums.ErrorCode.INVALID_PASSWORD;
+import static org.mentalk.common.enums.ErrorCode.MEMBER_NOT_FOUND;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -17,9 +19,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mentalk.auth.dto.EmailDto;
 import org.mentalk.auth.dto.JwtDto;
 import org.mentalk.auth.dto.LocalLoginDto;
 import org.mentalk.auth.dto.request.EmailCheckRequest;
+import org.mentalk.auth.dto.request.EmailFindRequest;
 import org.mentalk.auth.dto.request.LocalLoginRequest;
 import org.mentalk.common.config.SecurityConfig;
 import org.mentalk.common.exception.ApiException;
@@ -160,6 +164,73 @@ class AuthControllerTest {
         result.andExpect(status().isUnauthorized());
         result.andExpect(jsonPath("$.success").value(false));
         result.andExpect(jsonPath("$.payload.code").value(INVALID_PASSWORD.getCode()));
+        result.andDo(print());
+    }
+
+    @Test
+    @DisplayName("[이메일 찾기] 성공 -> 200 응답, 이메일 반환")
+    void findEmail_whenSuccess() throws Exception {
+        // given
+        EmailFindRequest request = RequestFactory.emailFindRequestWithDefaults();
+
+        EmailDto emailDto = DtoFactory.emailDtoWithDefaults();
+        given(authService.findEmail(anyString())).willReturn(emailDto);
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post("/api/auth/email/find")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        // then
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$.success").value(true));
+        result.andExpect(jsonPath("$.payload.data.email").value(emailDto.email()));
+        result.andDo(print());
+    }
+
+    @Test
+    @DisplayName("[이메일 찾기] 회원 정보를 찾을 수 없는 경우 -> 404 응답")
+    void findEmail_whenMemberNotFound() throws Exception {
+        // given
+        EmailFindRequest request = RequestFactory.emailFindRequestWithDefaults();
+
+        given(authService.findEmail(anyString())).willThrow(new ApiException(MEMBER_NOT_FOUND));
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post("/api/auth/email/find")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        // then
+        result.andExpect(status().isNotFound());
+        result.andExpect(jsonPath("$.success").value(false));
+        result.andExpect(jsonPath("$.payload.code").value(MEMBER_NOT_FOUND.getCode()));
+        result.andDo(print());
+    }
+
+    @Test
+    @DisplayName("[이메일 찾기] 계정 정보를 찾을 수 없는 경우 -> 404 응답")
+    void findEmail_whenAccountNotFound() throws Exception {
+        // given
+        EmailFindRequest request = RequestFactory.emailFindRequestWithDefaults();
+
+        given(authService.findEmail(anyString())).willThrow(new ApiException(ACCOUNT_NOT_FOUND));
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post("/api/auth/email/find")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        // then
+        result.andExpect(status().isNotFound());
+        result.andExpect(jsonPath("$.success").value(false));
+        result.andExpect(jsonPath("$.payload.code").value(ACCOUNT_NOT_FOUND.getCode()));
         result.andDo(print());
     }
 }
