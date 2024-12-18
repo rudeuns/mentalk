@@ -10,7 +10,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -111,7 +111,9 @@ class AuthControllerTest {
         // then
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.success").value(true));
-        result.andExpect(header().string("Authorization", "Bearer " + jwtDto.token()));
+        result.andExpect(cookie().value("access_token", jwtDto.token()));
+        result.andExpect(cookie().httpOnly("access_token", true));
+        result.andExpect(jsonPath("$.payload.data.role").value(String.valueOf(jwtDto.role())));
         result.andDo(print());
     }
 

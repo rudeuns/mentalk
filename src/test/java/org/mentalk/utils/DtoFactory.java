@@ -52,12 +52,12 @@ public class DtoFactory {
         return new LocalLoginDto("user@mentalk.com", "password");
     }
 
-    public static JwtDto jwtDto(Value<String> token) {
-        return new JwtDto(token.orElse("accessToken"));
+    public static JwtDto jwtDto(Value<String> token, Value<Role> role) {
+        return new JwtDto(token.orElse("accessToken"), role.orElse(Role.USER));
     }
 
     public static JwtDto jwtDtoWithDefaults() {
-        return new JwtDto("accessToken");
+        return new JwtDto("accessToken", Role.USER);
     }
 
     public static SessionDto sessionDto(Value<SessionType> sessionType, Value<String> title,
