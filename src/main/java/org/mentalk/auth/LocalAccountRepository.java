@@ -13,4 +13,6 @@ public interface LocalAccountRepository extends JpaRepository<LocalAccount, Long
     boolean existsByEmail(String email);
 
     Optional<LocalAccount> findByEmail(String email);
+
+    Optional<LocalAccount> findByMemberId(Long memberId);
 }

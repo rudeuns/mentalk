@@ -5,9 +5,11 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.mentalk.auth.dto.EmailDto;
 import org.mentalk.auth.dto.JwtDto;
 import org.mentalk.auth.dto.LocalLoginDto;
 import org.mentalk.auth.dto.request.EmailCheckRequest;
+import org.mentalk.auth.dto.request.EmailFindRequest;
 import org.mentalk.auth.dto.request.LocalLoginRequest;
 import org.mentalk.common.dto.ApiResponse;
 import org.springframework.http.HttpHeaders;
@@ -52,5 +54,13 @@ public class AuthController {
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                              .body(ApiResponse.success("로그인이 성공적으로 완료되었습니다.", responseData));
+    }
+
+    @PostMapping("/email/find")
+    public ResponseEntity<ApiResponse> findEmail(@RequestBody @Valid EmailFindRequest request) {
+        EmailDto emailDto = authService.findEmail(request.phoneNumber());
+
+        return ResponseEntity.ok()
+                             .body(ApiResponse.success("이메일을 성공적으로 찾았습니다.", emailDto));
     }
 }

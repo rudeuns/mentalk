@@ -25,6 +25,7 @@ public enum ErrorCode {
     // 404 Not Found
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "가입되지 않은 이메일입니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "N002", "회원 정보를 찾을 수 없습니다."),
+    ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "N003", "계정 정보를 찾을 수 없습니다."),
 
     // 409 Conflict
     ALREADY_EMAIL_IN_USE(HttpStatus.CONFLICT, "C001", "이미 사용 중인 이메일입니다."),
