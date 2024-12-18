@@ -38,6 +38,7 @@ public class AuthService {
 
         String token = jwtUtil.createToken(localAccount.getMember().getId(),
                                            localAccount.getMember().getRole());
-        return JwtDto.of(token);
+        
+        return JwtDto.of(token, localAccount.getMember().getRole());
     }
 }

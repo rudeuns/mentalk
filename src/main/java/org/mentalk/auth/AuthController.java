@@ -1,6 +1,9 @@
 package org.mentalk.auth;
 
 import jakarta.validation.Valid;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.mentalk.auth.dto.JwtDto;
 import org.mentalk.auth.dto.LocalLoginDto;
@@ -8,6 +11,7 @@ import org.mentalk.auth.dto.request.EmailCheckRequest;
 import org.mentalk.auth.dto.request.LocalLoginRequest;
 import org.mentalk.common.dto.ApiResponse;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,11 +40,17 @@ public class AuthController {
 
         JwtDto jwtDto = authService.localLogin(loginDto);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + jwtDto.token());
+        ResponseCookie jwtCookie = ResponseCookie.from("access_token", jwtDto.token())
+                                                 .httpOnly(true)
+                                                 .path("/")
+                                                 .maxAge(Duration.ofDays(1))
+                                                 .build();
+
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("role", String.valueOf(jwtDto.role()));
 
         return ResponseEntity.ok()
-                             .headers(headers)
-                             .body(ApiResponse.success("로그인이 성공적으로 완료되었습니다."));
+                             .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                             .body(ApiResponse.success("로그인이 성공적으로 완료되었습니다.", responseData));
     }
 }

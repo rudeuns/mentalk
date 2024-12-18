@@ -1,8 +1,10 @@
 package org.mentalk.auth.dto;
 
-public record JwtDto(String token) {
+import org.mentalk.common.enums.Role;
 
-    public static JwtDto of(String token) {
-        return new JwtDto(token);
+public record JwtDto(String token, Role role) {
+
+    public static JwtDto of(String token, Role role) {
+        return new JwtDto(token, role);
     }
 }
