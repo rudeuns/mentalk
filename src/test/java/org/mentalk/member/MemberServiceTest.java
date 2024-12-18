@@ -87,14 +87,14 @@ class MemberServiceTest {
         given(memberRepository.findByPhoneNumber(anyString())).willReturn(
                 Optional.of(EntityFactory.memberWithDefaults()));
 
-        doThrow(new ApiException(ErrorCode.ALREADY_REGISTERED))
+        doThrow(new ApiException(ErrorCode.ALREADY_ACCOUNT_REGISTERED))
                 .when(localAccountService)
                 .createLocalAccount(any(LocalAccountDto.class));
 
         // when & then
         assertThatThrownBy(() -> memberService.signup(signupDto))
                 .isInstanceOf(ApiException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ALREADY_REGISTERED);
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ALREADY_ACCOUNT_REGISTERED);
 
         verify(memberRepository, times(1)).findByPhoneNumber(anyString());
         verify(memberRepository, never()).save(any(Member.class));

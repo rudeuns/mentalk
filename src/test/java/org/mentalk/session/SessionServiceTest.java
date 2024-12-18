@@ -71,7 +71,7 @@ class SessionServiceTest {
         // when & then
         assertThatThrownBy(() -> sessionService.createSession(sessionDto))
                 .isInstanceOf(ApiException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.MENTOR_NOT_FOUND);
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.MEMBER_NOT_FOUND);
 
         verify(memberRepository, times(1)).findById(anyLong());
         verify(sessionRepository, never()).save(any(Session.class));

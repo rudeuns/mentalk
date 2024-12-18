@@ -70,7 +70,7 @@ class LocalAccountServiceTest {
         // when & then
         assertThatThrownBy(() -> localAccountService.createLocalAccount(localAccountDto))
                 .isInstanceOf(ApiException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ALREADY_REGISTERED);
+                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ALREADY_ACCOUNT_REGISTERED);
 
         verify(localAccountRepository, times(1)).existsByMemberId(anyLong());
         verify(localAccountRepository, never()).existsByEmail(anyString());

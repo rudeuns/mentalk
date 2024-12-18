@@ -1,7 +1,7 @@
 package org.mentalk.member;
 
+import static org.mentalk.common.enums.ErrorCode.ALREADY_ACCOUNT_REGISTERED;
 import static org.mentalk.common.enums.ErrorCode.ALREADY_EMAIL_IN_USE;
-import static org.mentalk.common.enums.ErrorCode.ALREADY_REGISTERED;
 import static org.mentalk.common.enums.ErrorCode.METHOD_ARG_NOT_VALID;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.Mockito.doNothing;
@@ -70,8 +70,8 @@ class MemberControllerTest {
         // given
         SignupRequest request = RequestFactory.signupRequestWithDefaults();
 
-        doThrow(new ApiException(ALREADY_REGISTERED)).when(memberService)
-                                                     .signup(any(SignupDto.class));
+        doThrow(new ApiException(ALREADY_ACCOUNT_REGISTERED)).when(memberService)
+                                                             .signup(any(SignupDto.class));
 
         // when
         ResultActions result = mockMvc.perform(
@@ -83,7 +83,7 @@ class MemberControllerTest {
         // then
         result.andExpect(status().isConflict());
         result.andExpect(jsonPath("$.success").value(false));
-        result.andExpect(jsonPath("$.payload.code").value(ALREADY_REGISTERED.getCode()));
+        result.andExpect(jsonPath("$.payload.code").value(ALREADY_ACCOUNT_REGISTERED.getCode()));
         result.andDo(print());
     }
 

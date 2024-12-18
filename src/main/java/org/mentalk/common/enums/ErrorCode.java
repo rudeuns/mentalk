@@ -23,12 +23,12 @@ public enum ErrorCode {
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "A001", "비밀번호가 일치하지 않습니다."),
 
     // 404 Not Found
-    EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "이메일을 찾을 수 없습니다."),
-    MENTOR_NOT_FOUND(HttpStatus.NOT_FOUND, "N002", "멘토 회원이 존재하지 않습니다."),
+    EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "N001", "가입되지 않은 이메일입니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "N002", "회원 정보를 찾을 수 없습니다."),
 
     // 409 Conflict
     ALREADY_EMAIL_IN_USE(HttpStatus.CONFLICT, "C001", "이미 사용 중인 이메일입니다."),
-    ALREADY_REGISTERED(HttpStatus.CONFLICT, "C002", "이미 로컬 계정이 등록된 회원입니다."),
+    ALREADY_ACCOUNT_REGISTERED(HttpStatus.CONFLICT, "C002", "이미 계정이 등록된 회원입니다."),
 
     // 500 Server Error
     JWT_CREATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S001", "JWT 생성 중 오류가 발생했습니다.");
