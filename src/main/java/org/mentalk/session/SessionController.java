@@ -30,6 +30,6 @@ public class SessionController {
 
         SessionIdDto sessionIdDto = sessionService.createSession(sessionDto);
 
-        return ResponseEntity.ok().body(ApiResponse.success("세션이 성공적으로 생성되었습니다.", sessionIdDto));
+        return ResponseEntity.ok().body(ApiResponse.success(sessionIdDto));
     }
 }

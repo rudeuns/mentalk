@@ -16,10 +16,6 @@ public record ApiResponse(boolean success, Object payload) {
         return new ApiResponse(true, new Success<>("success", data));
     }
 
-    public static ApiResponse success(String message) {
-        return new ApiResponse(true, new Success<>(message, null));
-    }
-
     public static ApiResponse failure(String code, String message) {
         return new ApiResponse(false, new Error(code, message));
     }

@@ -34,7 +34,7 @@ public class AuthController {
         authService.checkEmailInUse(request.email());
 
         return ResponseEntity.ok()
-                             .body(ApiResponse.success("사용 가능한 이메일입니다."));
+                             .body(ApiResponse.success(null));
     }
 
     @PostMapping("/login")
@@ -54,7 +54,7 @@ public class AuthController {
 
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                             .body(ApiResponse.success("로그인이 성공적으로 완료되었습니다.", responseData));
+                             .body(ApiResponse.success(responseData));
     }
 
     @PostMapping("/email/exists")
@@ -73,7 +73,7 @@ public class AuthController {
         EmailDto emailDto = authService.findEmail(request.phoneNumber());
 
         return ResponseEntity.ok()
-                             .body(ApiResponse.success("이메일을 성공적으로 찾았습니다.", emailDto));
+                             .body(ApiResponse.success(emailDto));
     }
 
     @PostMapping("/password/reset")
