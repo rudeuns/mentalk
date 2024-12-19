@@ -2,9 +2,9 @@ package org.mentalk.member;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.mentalk.common.dto.ApiResponse;
+import org.mentalk.common.response.ApiResponse;
 import org.mentalk.member.dto.SignupDto;
-import org.mentalk.member.dto.request.SignupRequest;
+import org.mentalk.member.request.SignupRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,4 +1,4 @@
-package org.mentalk.session.dto.request;
+package org.mentalk.session.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

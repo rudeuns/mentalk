@@ -18,7 +18,7 @@ import org.mentalk.common.config.SecurityConfig;
 import org.mentalk.common.security.JwtUtil;
 import org.mentalk.session.dto.SessionDto;
 import org.mentalk.session.dto.SessionIdDto;
-import org.mentalk.session.dto.request.SessionCreateRequest;
+import org.mentalk.session.request.SessionCreateRequest;
 import org.mentalk.utils.DtoFactory;
 import org.mentalk.utils.RequestFactory;
 import org.springframework.beans.factory.annotation.Autowired;

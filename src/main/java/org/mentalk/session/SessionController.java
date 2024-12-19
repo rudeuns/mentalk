@@ -2,11 +2,11 @@ package org.mentalk.session;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.mentalk.common.dto.ApiResponse;
+import org.mentalk.common.response.ApiResponse;
 import org.mentalk.common.security.PrincipalDetails;
 import org.mentalk.session.dto.SessionDto;
 import org.mentalk.session.dto.SessionIdDto;
-import org.mentalk.session.dto.request.SessionCreateRequest;
+import org.mentalk.session.request.SessionCreateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;

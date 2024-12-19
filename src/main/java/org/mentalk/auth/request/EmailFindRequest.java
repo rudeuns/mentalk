@@ -1,4 +1,4 @@
-package org.mentalk.auth.dto.request;
+package org.mentalk.auth.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

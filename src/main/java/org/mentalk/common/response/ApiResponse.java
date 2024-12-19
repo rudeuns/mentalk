@@ -1,4 +1,4 @@
-package org.mentalk.common.dto;
+package org.mentalk.common.response;
 
 public record ApiResponse(boolean success, Object payload) {
 

@@ -3,7 +3,7 @@ package org.mentalk.session.dto;
 import org.mentalk.common.enums.SessionType;
 import org.mentalk.member.domain.Member;
 import org.mentalk.session.domain.Session;
-import org.mentalk.session.dto.request.SessionCreateRequest;
+import org.mentalk.session.request.SessionCreateRequest;
 
 public record SessionDto(SessionType sessionType,
                          String title,

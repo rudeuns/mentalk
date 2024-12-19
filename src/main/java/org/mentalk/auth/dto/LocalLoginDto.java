@@ -1,6 +1,6 @@
 package org.mentalk.auth.dto;
 
-import org.mentalk.auth.dto.request.LocalLoginRequest;
+import org.mentalk.auth.request.LocalLoginRequest;
 
 public record LocalLoginDto(String email, String password) {
 

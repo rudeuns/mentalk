@@ -1,4 +1,4 @@
-package org.mentalk.member.dto.request;
+package org.mentalk.member.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

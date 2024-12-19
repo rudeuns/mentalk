@@ -1,6 +1,6 @@
 package org.mentalk.member.dto;
 
-import org.mentalk.member.dto.request.SignupRequest;
+import org.mentalk.member.request.SignupRequest;
 
 public record SignupDto(String email,
                         String password,

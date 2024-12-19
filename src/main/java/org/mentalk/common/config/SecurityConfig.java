@@ -3,7 +3,7 @@ package org.mentalk.common.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.mentalk.common.dto.ApiResponse;
+import org.mentalk.common.response.ApiResponse;
 import org.mentalk.common.enums.ErrorCode;
 import org.mentalk.common.security.JwtFilter;
 import org.springframework.context.annotation.Bean;

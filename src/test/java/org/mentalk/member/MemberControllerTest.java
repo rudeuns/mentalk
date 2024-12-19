@@ -18,7 +18,7 @@ import org.mentalk.common.config.SecurityConfig;
 import org.mentalk.common.exception.ApiException;
 import org.mentalk.common.security.JwtUtil;
 import org.mentalk.member.dto.SignupDto;
-import org.mentalk.member.dto.request.SignupRequest;
+import org.mentalk.member.request.SignupRequest;
 import org.mentalk.utils.RequestFactory;
 import org.mentalk.utils.Value;
 import org.springframework.beans.factory.annotation.Autowired;

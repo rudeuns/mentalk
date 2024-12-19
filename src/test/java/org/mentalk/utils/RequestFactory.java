@@ -1,11 +1,11 @@
 package org.mentalk.utils;
 
-import org.mentalk.auth.dto.request.EmailCheckRequest;
-import org.mentalk.auth.dto.request.EmailFindRequest;
-import org.mentalk.auth.dto.request.LocalLoginRequest;
+import org.mentalk.auth.request.EmailCheckRequest;
+import org.mentalk.auth.request.EmailFindRequest;
+import org.mentalk.auth.request.LocalLoginRequest;
 import org.mentalk.common.enums.SessionType;
-import org.mentalk.member.dto.request.SignupRequest;
-import org.mentalk.session.dto.request.SessionCreateRequest;
+import org.mentalk.member.request.SignupRequest;
+import org.mentalk.session.request.SessionCreateRequest;
 
 public class RequestFactory {
 
