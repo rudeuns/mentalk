@@ -35,4 +35,8 @@ public class LocalAccount extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String hashedPassword;
+
+    public void changePassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
 }

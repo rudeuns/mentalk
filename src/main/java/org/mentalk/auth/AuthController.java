@@ -11,6 +11,7 @@ import org.mentalk.auth.dto.LocalLoginDto;
 import org.mentalk.auth.dto.request.EmailCheckRequest;
 import org.mentalk.auth.dto.request.EmailFindRequest;
 import org.mentalk.auth.dto.request.LocalLoginRequest;
+import org.mentalk.auth.dto.request.PasswordResetRequest;
 import org.mentalk.common.dto.ApiResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -56,11 +57,30 @@ public class AuthController {
                              .body(ApiResponse.success("로그인이 성공적으로 완료되었습니다.", responseData));
     }
 
+    @PostMapping("/email/exists")
+    public ResponseEntity<ApiResponse> checkEmailExists(@RequestBody @Valid EmailCheckRequest request) {
+        boolean exists = authService.isEmailExists(request.email());
+
+        Map<String, Boolean> responseData = new HashMap<>();
+        responseData.put("exists", exists);
+
+        return ResponseEntity.ok()
+                             .body(ApiResponse.success(responseData));
+    }
+
     @PostMapping("/email/find")
     public ResponseEntity<ApiResponse> findEmail(@RequestBody @Valid EmailFindRequest request) {
         EmailDto emailDto = authService.findEmail(request.phoneNumber());
 
         return ResponseEntity.ok()
                              .body(ApiResponse.success("이메일을 성공적으로 찾았습니다.", emailDto));
+    }
+
+    @PostMapping("/password/reset")
+    public ResponseEntity<ApiResponse> resetPassword(@RequestBody @Valid PasswordResetRequest request) {
+        authService.resetPassword(request.email(), request.password());
+
+        return ResponseEntity.ok()
+                             .body(ApiResponse.success(null));
     }
 }

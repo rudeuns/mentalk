@@ -12,6 +12,10 @@ public record ApiResponse(boolean success, Object payload) {
         return new ApiResponse(true, new Success<>(message, data));
     }
 
+    public static <T> ApiResponse success(T data) {
+        return new ApiResponse(true, new Success<>("success", data));
+    }
+
     public static ApiResponse success(String message) {
         return new ApiResponse(true, new Success<>(message, null));
     }

@@ -31,6 +31,11 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
+    public boolean isEmailExists(String email) {
+        return localAccountRepository.existsByEmail(email);
+    }
+
+    @Transactional(readOnly = true)
     public JwtDto localLogin(LocalLoginDto loginDto) {
         LocalAccount localAccount = localAccountRepository.findByEmail(loginDto.email())
                                                           .orElseThrow(() -> new ApiException(
@@ -57,5 +62,16 @@ public class AuthService {
                                                                   ErrorCode.ACCOUNT_NOT_FOUND));
 
         return EmailDto.of(localAccount.getEmail());
+    }
+
+    @Transactional
+    public void resetPassword(String email, String password) {
+        LocalAccount localAccount = localAccountRepository.findByEmail(email).orElseThrow(
+                () -> new ApiException(ErrorCode.ACCOUNT_NOT_FOUND));
+
+        String hashedPassword = passwordEncoder.encode(password);
+        localAccount.changePassword(hashedPassword);
+
+        localAccountRepository.save(localAccount);
     }
 }
