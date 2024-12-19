@@ -24,13 +24,6 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     @Transactional(readOnly = true)
-    public void checkEmailInUse(String email) {
-        if (localAccountRepository.existsByEmail(email)) {
-            throw new ApiException(ErrorCode.ALREADY_EMAIL_IN_USE);
-        }
-    }
-
-    @Transactional(readOnly = true)
     public boolean isEmailExists(String email) {
         return localAccountRepository.existsByEmail(email);
     }

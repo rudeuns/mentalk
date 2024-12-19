@@ -1,15 +1,12 @@
 package org.mentalk.auth;
 
 import static org.mentalk.common.enums.ErrorCode.ACCOUNT_NOT_FOUND;
-import static org.mentalk.common.enums.ErrorCode.ALREADY_EMAIL_IN_USE;
 import static org.mentalk.common.enums.ErrorCode.EMAIL_NOT_FOUND;
 import static org.mentalk.common.enums.ErrorCode.INVALID_PASSWORD;
 import static org.mentalk.common.enums.ErrorCode.MEMBER_NOT_FOUND;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
@@ -22,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.mentalk.auth.dto.EmailDto;
 import org.mentalk.auth.dto.JwtDto;
 import org.mentalk.auth.dto.LocalLoginDto;
-import org.mentalk.auth.request.EmailCheckRequest;
 import org.mentalk.auth.request.EmailFindRequest;
 import org.mentalk.auth.request.LocalLoginRequest;
 import org.mentalk.common.config.SecurityConfig;
@@ -51,50 +47,6 @@ class AuthControllerTest {
 
     @MockBean
     private AuthService authService;
-
-    @Test
-    @DisplayName("[이메일 중복 확인] 중복 아닌 경우 -> 200 응답")
-    void whenEmailNotInUse() throws Exception {
-        // given
-        EmailCheckRequest request = RequestFactory.emailCheckRequestWithDefaults();
-
-        doNothing().when(authService).checkEmailInUse(anyString());
-
-        // when
-        ResultActions result = mockMvc.perform(
-                post("/api/auth/email/check")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-        );
-
-        // then
-        result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.success").value(true));
-        result.andDo(print());
-    }
-
-    @Test
-    @DisplayName("[이메일 중복 확인] 중복인 경우 -> 409 응답")
-    void whenEmailInUse() throws Exception {
-        // given
-        EmailCheckRequest request = RequestFactory.emailCheckRequestWithDefaults();
-
-        doThrow(new ApiException(ALREADY_EMAIL_IN_USE))
-                .when(authService).checkEmailInUse(anyString());
-
-        // when
-        ResultActions result = mockMvc.perform(
-                post("/api/auth/email/check")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-        );
-
-        // then
-        result.andExpect(status().isConflict());
-        result.andExpect(jsonPath("$.success").value(false));
-        result.andExpect(jsonPath("$.payload.code").value(ALREADY_EMAIL_IN_USE.getCode()));
-        result.andDo(print());
-    }
 
     @Test
     @DisplayName("[로컬 로그인] 성공 -> 200 응답, 헤더 토큰")

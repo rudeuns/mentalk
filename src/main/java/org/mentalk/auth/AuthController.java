@@ -28,15 +28,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/email/check")
-    public ResponseEntity<ApiResponse> checkEmailInUse(
-            @RequestBody @Valid EmailCheckRequest request) {
-        authService.checkEmailInUse(request.email());
-
-        return ResponseEntity.ok()
-                             .body(ApiResponse.success(null));
-    }
-
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> localLogin(@RequestBody @Valid LocalLoginRequest request) {
         LocalLoginDto loginDto = LocalLoginDto.of(request);

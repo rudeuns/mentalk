@@ -1,7 +1,6 @@
 package org.mentalk.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -49,33 +48,6 @@ class AuthServiceTest {
 
     @InjectMocks
     private AuthService authService;
-
-    @Test
-    @DisplayName("[이메일 중복 확인] 중복 아닌 경우 -> 예외 없음")
-    void whenEmailNotInUse() {
-        // given
-        given(localAccountRepository.existsByEmail(anyString())).willReturn(false);
-
-        // when & then
-        assertThatCode(
-                () -> authService.checkEmailInUse("user@test.com")).doesNotThrowAnyException();
-
-        verify(localAccountRepository, times(1)).existsByEmail(anyString());
-    }
-
-    @Test
-    @DisplayName("[이메일 중복 확인] 중복인 경우 -> 예외 발생")
-    void whenEmailInUse() {
-        // given
-        given(localAccountRepository.existsByEmail(anyString())).willReturn(true);
-
-        // when & then
-        assertThatThrownBy(() -> authService.checkEmailInUse("user@test.com"))
-                .isInstanceOf(ApiException.class)
-                .hasFieldOrPropertyWithValue("errorCode", ErrorCode.ALREADY_EMAIL_IN_USE);
-
-        verify(localAccountRepository, times(1)).existsByEmail(anyString());
-    }
 
     @Test
     @DisplayName("[로컬 로그인] 성공")
