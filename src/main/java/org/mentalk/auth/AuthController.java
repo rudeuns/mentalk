@@ -12,10 +12,15 @@ import org.mentalk.auth.request.EmailCheckRequest;
 import org.mentalk.auth.request.EmailFindRequest;
 import org.mentalk.auth.request.LocalLoginRequest;
 import org.mentalk.auth.request.PasswordResetRequest;
+import org.mentalk.common.enums.ErrorCode;
 import org.mentalk.common.response.ApiResponse;
+import org.mentalk.common.security.PrincipalDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +32,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+
+    @GetMapping("/check")
+    public ResponseEntity<ApiResponse> checkAuth() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && !authentication.getPrincipal().equals("anonymousUser")) {
+            PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+
+            return ResponseEntity.ok()
+                                 .body(ApiResponse.success(Map.of("role", principal.role().name())));
+        } else {
+            return ResponseEntity.status(ErrorCode.UNAUTHORIZED.getStatus())
+                                 .body(ApiResponse.failure(ErrorCode.UNAUTHORIZED.getCode(),
+                                                           ErrorCode.UNAUTHORIZED.getMessage()));
+        }
+    }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> localLogin(@RequestBody @Valid LocalLoginRequest request) {
@@ -46,6 +67,19 @@ public class AuthController {
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                              .body(ApiResponse.success(responseData));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse> logout() {
+        ResponseCookie deleteCookie = ResponseCookie.from("access_token", "")
+                                                    .httpOnly(true)
+                                                    .path("/")
+                                                    .maxAge(0)
+                                                    .build();
+
+        return ResponseEntity.ok()
+                             .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                             .body(ApiResponse.success(null));
     }
 
     @PostMapping("/email/exists")
