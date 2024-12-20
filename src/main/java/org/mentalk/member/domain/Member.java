@@ -41,4 +41,8 @@ public class Member extends BaseTimeEntity {
     protected void prePersist() {
         this.role = this.role == null ? Role.USER : this.role;
     }
+
+    public void changeRole(Role role) {
+        this.role = role;
+    }
 }

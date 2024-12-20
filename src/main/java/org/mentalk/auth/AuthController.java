@@ -2,7 +2,6 @@ package org.mentalk.auth;
 
 import jakarta.validation.Valid;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.mentalk.auth.dto.EmailDto;
@@ -61,12 +60,9 @@ public class AuthController {
                                                  .maxAge(Duration.ofDays(1))
                                                  .build();
 
-        Map<String, String> responseData = new HashMap<>();
-        responseData.put("role", String.valueOf(jwtDto.role()));
-
         return ResponseEntity.ok()
                              .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                             .body(ApiResponse.success(responseData));
+                             .body(ApiResponse.success(Map.of("role", jwtDto.role().name())));
     }
 
     @PostMapping("/logout")
@@ -86,11 +82,8 @@ public class AuthController {
     public ResponseEntity<ApiResponse> checkEmailExists(@RequestBody @Valid EmailCheckRequest request) {
         boolean exists = authService.isEmailExists(request.email());
 
-        Map<String, Boolean> responseData = new HashMap<>();
-        responseData.put("exists", exists);
-
         return ResponseEntity.ok()
-                             .body(ApiResponse.success(responseData));
+                             .body(ApiResponse.success(Map.of("exists", exists)));
     }
 
     @PostMapping("/email/find")
